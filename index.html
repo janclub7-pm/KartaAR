@@ -4,24 +4,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
+    
+    <script>
+      // Czekamy aż strona się załaduje
+      document.addEventListener("DOMContentLoaded", function() {
+        const sceneEl = document.querySelector('a-scene');
+        const videoEl = document.querySelector('#vid');
+
+        // Czekamy aż AR będzie gotowe
+        sceneEl.addEventListener('arReady', (event) => {
+          // Czasami przeglądarka blokuje autoplay dopóki użytkownik nie dotknie ekranu.
+          // Ten kod nasłuchuje pierwszego dotknięcia w dowolnym miejscu
+          // i wymusza start wideo.
+          document.body.addEventListener('click', () => {
+            videoEl.play();
+          }, { once: true }); // 'once: true' oznacza, że zadziała tylko za pierwszym razem
+        });
+      });
+    </script>
   </head>
   <body>
     <a-scene mindar-image="imageTargetSrc: ./targets.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       
       <a-assets>
-        <img id="card-overlay" src="./kot.mp4" />
+        <video id="vid" src="./film.mp4" autoplay loop muted playsinline crossorigin="anonymous"></video>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
       <a-entity mindar-image-target="targetIndex: 0">
         
-        <a-plane src="#card-overlay" position="0 0 0" height="1" width="1" rotation="0 0 0"></a-plane>
+        <a-plane src="#vid" position="0 0 0" height="1" width="1" rotation="0 0 0"></a-plane>
         
       </a-entity>
     </a-scene>
   </body>
 </html>
-
-
-
